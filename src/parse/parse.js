@@ -767,7 +767,7 @@ function reflectDataFormGuestbookToPage(guestbookId) {
                   };
    
                   if (res.length !== 0) {
-                     objectToSave.url = `http://parse.boluga.com:7070/view_guestbook/${guestbookId}`;
+                     objectToSave.url = `https://parse.boluga.com:7070/view_guestbook/${guestbookId}`;
                   } else {
                      objectToSave.url = null;
                   }
