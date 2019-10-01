@@ -65,6 +65,10 @@ function getBase64(file) {
    });
 }
 
+function changeImgaeURL(imageObject) {
+   return( imageObject.url().replace('/parse/', '/parse/parse/') );
+}
+
 exports.getTokenForUsernamePassword = function( username, password, callback )
 {
    Parse.User.logIn( username, password)
@@ -275,7 +279,7 @@ exports.getGuestBookFromId = function( guestbookId, callback) {
                   var imageObject = res[0].get('iPhone3x');
                   
                   if (typeof(imageObject) === 'object') {
-                     guestbookData.image = imageObject.url();
+                     guestbookData.image = changeImgaeURL(imageObject);
                   } else {
                      guestbookData.image = undefined;
                   }
@@ -331,7 +335,7 @@ exports.getGuestBookForUser = function( user, location, callback ){
                   var imageObject = object.get('iPhone3x');
                   
                   if (typeof(imageObject) === 'object') {
-                     guestBookData.image = imageObject.url();
+                     guestBookData.image = changeImgaeURL(imageObject);
                   }
 
                   callback(null, guestBookData);
@@ -500,7 +504,7 @@ function reallySaveGuestbookToServer( object, objectToSave, callback ) {
             var imageObject = object.get('iPhone3x');
                         
             if (typeof(imageObject) === 'object') {
-               imageUrl = imageObject.url();
+               imageUrl = changeImgaeURL(imageObject);
             }
    
             guestbookData.image = imageUrl;
@@ -572,7 +576,7 @@ function getSectionImage(sectionData, callback) {
                var imageURL = null;
                var imageObject = res[i].get('iPhone3x');
                if (typeof(imageObject) === 'object') {
-                  imageURL = imageObject.url();
+                  imageURL = changeImgaeURL(imageObject);
                }
                sectionData[j].image = imageURL;
             }
@@ -708,7 +712,7 @@ function reallySaveSectionToServer( object, objectToSave, callback ) {
             var imageObject = res[0].get('iPhone3x');
 
             if (typeof(imageObject) === 'object') {
-               imageURL = imageObject.url();
+               imageURL = changeImgaeURL(imageObject);
             }
             callback(null, imageURL);
          })
@@ -1211,7 +1215,8 @@ exports.getMessages = function( user, resorts, callback ) {
                var imageUrl = "";
                var imageObject = object.get('thumbnailImageFile');
                if (typeof(imageObject) === 'object') {
-                  imageUrl = imageObject.url();
+                  changeImgaeURL(imageObject);
+                  imageUrl = changeImgaeURL(imageObject);
                }
                var msg = {
                   id: object.id,
@@ -1241,7 +1246,7 @@ exports.getMessageWithId = function(user, id, callback) {
          var imageUrl = "";
          var imageObject = object.get('thumbnailImageFile');
          if (typeof(imageObject) === 'object') {
-            imageUrl = imageObject.url();
+            imageUrl = changeImgaeURL(imageObject);
          }
          var msg = {
             id: object.id,
@@ -1494,9 +1499,9 @@ exports.getStyle = function(user, callback) {
                      var imageObject = res[i].get('iPhone3x');
 
                      if (res[i].id === object.get('logo')) {                        
-                        logoImageUrl = typeof(imageObject) === 'object' ? imageObject.url() : "";
+                        logoImageUrl = typeof(imageObject) === 'object' ? changeImgaeURL(imageObject) : "";
                      } else if (res[i].id === object.get('logoSmall')) {
-                        logoSmallImageUrl = typeof(imageObject) === 'object' ? imageObject.url() : "";
+                        logoSmallImageUrl = typeof(imageObject) === 'object' ? changeImgaeURL(imageObject) : "";
                      }
                   }
                   styles['logo'] = logoImageUrl;
@@ -1567,7 +1572,7 @@ exports.getIcons = function(callback) {
                var imageURL = '';
                var imageObject = object.get('iPhone3x');
                if (typeof(imageObject) === 'object') {
-                  imageURL = imageObject.url();
+                  imageURL = changeImgaeURL(imageObject);
                }
                var icon = {
                   id: object.id,
@@ -1810,7 +1815,7 @@ exports.getTabImage = function(id, callback) {
          var imgObject = object.get('iPhone3x');
 
          if (typeof(imgObject) === 'object') {
-            imageUrl = imgObject.url();
+            imageUrl = changeImgaeURL(imgObject);
          }
 
          callback(null, imageUrl);

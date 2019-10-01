@@ -16,5 +16,6 @@ export default {
   //  masterKey: 'wthrly',                                        // Parse MasterKey For local test
    masterKey: 'YX2CxAN3aTINEcBFqLrvp3r666BjKc7X76yaUMWR',
   //  serverURL: 'http://localhost:1337/parse'                    // Parse ServerURL For local test
-   serverURL: 'http://parse.boluga.com:1337/parse'
+   // serverURL: 'http://parse.boluga.com:1337/parse'
+   serverURL: 'https://parse.boluga.com/parse/parse'
 };
