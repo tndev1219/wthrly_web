@@ -45,7 +45,7 @@ class HomePage extends React.Component {
                   if (res) {
                      self._isMounted && self.setState({ sub_info: res });
                   } else {
-                     self._isMounted && self.setState({ isNotSubscribed: 'You have not subscribed to any palns yet!' });
+                     self._isMounted && self.setState({ isNotSubscribed: 'You have not subscribed to any plans yet!' });
                   }
                }
             });
