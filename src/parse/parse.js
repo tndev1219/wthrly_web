@@ -1529,32 +1529,32 @@ exports.getTabs = function(user, location, callback) {
    query.contains("locationName", location);
    query.ascending("order");
    query.find()
-      .then(function(res) {
-         if (res.length !== 0) {
-            for (var i = 0; i < res.length; i++) {
-               var object = res[i];
-               let data = {
-                  id: object.id,
-                  type: object.get('type'),
-                  order: object.get('order'),
-                  telephone: object.get('telephone'),
-                  iconText: object.get('iconText'),
-                  clientId: object.get('clientId'),
-                  url: object.get('url'),
-                  icon: object.get('icon'),
-                  image: object.get('image')
-               }
-               tabs.push(data);
+   .then(function(res) {
+      if (res.length !== 0) {
+         for (var i = 0; i < res.length; i++) {
+            var object = res[i];
+            let data = {
+               id: object.id,
+               type: object.get('type'),
+               order: object.get('order'),
+               telephone: object.get('telephone'),
+               iconText: object.get('iconText'),
+               clientId: object.get('clientId'),
+               url: object.get('url'),
+               icon: object.get('icon'),
+               image: object.get('image')
             }
-
-            callback(null, tabs);
-         } else {
-            callback(null, []);
+            tabs.push(data);
          }
-      })
-      .catch(function(err) {
-         callback(err, null);
-      })
+
+         callback(null, tabs);
+      } else {
+         callback(null, []);
+      }
+   })
+   .catch(function(err) {
+      callback(err, null);
+   })
 };
 
 exports.getIcons = function(callback) {
@@ -1735,72 +1735,72 @@ exports.tabImageUpload = function(user, location, id, imageId, imageFile, callba
    var clientId = getClientId(user);
 
    getBase64(imageFile)
-      .then(function(base64) {
-         var parseFile = new Parse.File("image.jpg", {base64});
-         var objectToSave = {
-            iPhone3x: parseFile,
-            iPhone2x: parseFile,
-            iPad2x: parseFile,
-            clientId: clientId
-         };
+   .then(function(base64) {
+      var parseFile = new Parse.File("image.jpg", {base64});
+      var objectToSave = {
+         iPhone3x: parseFile,
+         iPhone2x: parseFile,
+         iPad2x: parseFile,
+         clientId: clientId
+      };
 
-         if (imageId && imageId !== 'FTmo4RrfKc') {        // in case the current image is not default image
-            var Image = Parse.Object.extend("Image");         
-            var query = new Parse.Query(Image);   
+      if (imageId && imageId !== 'FTmo4RrfKc') {        // in case the current image is not default image
+         var Image = Parse.Object.extend("Image");         
+         var query = new Parse.Query(Image);   
 
-            query.equalTo('objectId', imageId)
+         query.equalTo('objectId', imageId)
+         query.find()
+            .then(function(res) {
+               var object = res[0];                  
+
+               object.save(objectToSave)
+                  .then(function(res) {
+                     self.getTabs(user, location, callback)
+                  })
+                  .catch(function(err) {
+                     callback(err, null);
+                  })
+            })
+            .catch(function(err) {
+               callback(err, null);
+            })
+      } else {
+         Image = Parse.Object.extend("Image");
+         var object = new Image();
+         
+         object.save(objectToSave)
+         .then(function(res) {
+            var imageTabId = res.id;
+            var Page = Parse.Object.extend('Page');
+            query = new Parse.Query(Page); 
+
+            query.equalTo('objectId', id);
             query.find()
-               .then(function(res) {
-                  var object = res[0];                  
+            .then(function(res) {
+               object = res[0];
+               objectToSave = {
+                  image: imageTabId
+               };
 
-                  object.save(objectToSave)
-                     .then(function(res) {
-                        self.getTabs(user, location, callback)
-                     })
-                     .catch(function(err) {
-                        callback(err, null);
-                     })
+               object.save(objectToSave)
+               .then(function(res) {
+                  self.getTabs(user, location, callback);
                })
                .catch(function(err) {
                   callback(err, null);
                })
-         } else {
-            Image = Parse.Object.extend("Image");
-            var object = new Image();
-            
-            object.save(objectToSave)
-               .then(function(res) {
-                  var imageTabId = res.id;
-                  var Page = Parse.Object.extend('Page');
-                  query = new Parse.Query(Page); 
-
-                  query.equalTo('objectId', id);
-                  query.find()
-                     .then(function(res) {
-                        object = res[0];
-                        objectToSave = {
-                           image: imageTabId
-                        };
-
-                        object.save(objectToSave)
-                           .then(function(res) {
-                              self.getTabs(user, location, callback);
-                           })
-                           .catch(function(err) {
-                              callback(err, null);
-                           })
-                     })
-                     .catch(function(err) {
-                        callback(err, null);
-                     })
-               })
-               .catch(function(err) {
-                  callback(err, null);
-               })
-         }
-      }, function(err) {
-         callback(err, null);
-      });  
+            })
+            .catch(function(err) {
+               callback(err, null);
+            })
+         })
+         .catch(function(err) {
+            callback(err, null);
+         })
+      }
+   }, function(err) {
+      callback(err, null);
+   });  
 }
 
 exports.getTabImage = function(id, callback) {
@@ -1809,20 +1809,20 @@ exports.getTabImage = function(id, callback) {
 
    query.equalTo('objectId', id);
    query.find()
-      .then(function(res) {
-         var object = res[0];
-         var imageUrl = null;
-         var imgObject = object.get('iPhone3x');
+   .then(function(res) {
+      var object = res[0];
+      var imageUrl = null;
+      var imgObject = object.get('iPhone3x');
 
-         if (typeof(imgObject) === 'object') {
-            imageUrl = changeImgaeURL(imgObject);
-         }
+      if (typeof(imgObject) === 'object') {
+         imageUrl = changeImgaeURL(imgObject);
+      }
 
-         callback(null, imageUrl);
-      })
-      .catch(function(err) {
-         callback(err, null);
-      })
+      callback(null, imageUrl);
+   })
+   .catch(function(err) {
+      callback(err, null);
+   })
 }
 
 exports.tabReorder = function(user, location, tabData, callback) {

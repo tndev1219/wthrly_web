@@ -52,11 +52,25 @@ class Tab extends React.Component {
       this.setState({ tabIcon: this.state.tabIcon[0].iconFile });
    }
 
-   componentDidUpdate() {
+   componentDidMount() {
       const self = this;
 
       if (this.props.tab.type === 'image' && this.props.tab.image) {
-         self._isMounted && parse.getTabImage(self.props.tab.image, function(err, res) {
+         self._isMounted && parse.getTabImage(this.props.tab.image, function(err, res) {
+            if (err) {
+               self._isMounted && self.props.showAlert(err.message, 'error');
+            } else {
+               self._isMounted && self.setState({ image: res });
+            }
+         });
+      }
+   }
+
+   UNSAFE_componentWillReceiveProps(nextProps) {
+      const self = this;
+
+      if (nextProps.tab.type === 'image' && nextProps.tab.image) {
+         self._isMounted && parse.getTabImage(nextProps.tab.image, function(err, res) {
             if (err) {
                self._isMounted && self.props.showAlert(err.message, 'error');
             } else {

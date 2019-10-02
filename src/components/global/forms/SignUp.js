@@ -151,7 +151,7 @@ class SignUp extends React.Component {
                />
                <TextField
                   required
-                  label="Hotel/Rosort Website"
+                  label="Hotel/Resort Website"
                   className="iron-form-input-wrap"
                   type="text"
                   name="websiteUrl" 
@@ -160,7 +160,7 @@ class SignUp extends React.Component {
                />
                <TextField
                   required
-                  label="Hotel/Rosort Telephone"
+                  label="Hotel/Resort Telephone"
                   className="iron-form-input-wrap"
                   type="number"
                   name="phoneNumber" 

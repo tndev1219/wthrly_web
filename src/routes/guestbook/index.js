@@ -293,7 +293,7 @@ class GuestBookPage extends React.Component {
                </FormControl>
                <hr className="mb-25"></hr>
                <div>
-                  <h4>Location Name Guestbook</h4>
+                  <h4>{this.state.locations[this.state.selectedLocationID]} Guestbook</h4>
                   <p className="lead mb-20">You can add an image to your LocationName Guestbook intro paragraph here.</p>
                   
                   {this.state.guestbookData ?

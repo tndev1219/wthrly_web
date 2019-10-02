@@ -37,6 +37,7 @@ class MessagingPage extends React.Component {
       };
       this.handleClick = this.handleClick.bind(this);
       this.handleChange = this.handleChange.bind(this);
+      this.handleResortCheck = this.handleResortCheck.bind(this);
       this.handleCheck = this.handleCheck.bind(this);
       this.handleDate = this.handleDate.bind(this);
       this.handleInputFile = this.handleInputFile.bind(this);
@@ -93,13 +94,19 @@ class MessagingPage extends React.Component {
       this.setState({fields});
    }
 
-   handleCheck(e) {
+   handleResortCheck(e) {
       var fields = this.state.fields;
       if (e.target.checked) {
          fields.resorts.push(e.target.name);
       } else {
          fields.resorts = fields.resorts.filter(resort => resort !== e.target.name);
       }
+
+      this.setState({fields});
+   }
+
+   handleCheck(e) {
+      var fields = this.state.fields;
 
       fields[e.target.name] = !fields[e.target.name];
 
@@ -252,7 +259,7 @@ class MessagingPage extends React.Component {
                                        'aria-label': 'uncontrolled-checkbox',
                                     }}
                                     name={subLocation.locationId}
-                                    onChange={this.handleCheck}
+                                    onChange={this.handleResortCheck}
                                  />
                               </Grid>
                            </Grid>
