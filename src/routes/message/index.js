@@ -139,7 +139,7 @@ class MessagingPage extends React.Component {
                   {!this.state.messages ? 
                      <Grid container spacing={5} className="mt-20">
                         <Grid item  xs={12} sm={12} md={12} lg={12} xl={12} style={{display: "flex", justifyContent: "center"}}>
-                           {!this.state.messages && <CircularProgress className="btn-logoimg-spin" />}
+                           <CircularProgress className="btn-spin" />
                         </Grid>
                      </Grid>
                   :

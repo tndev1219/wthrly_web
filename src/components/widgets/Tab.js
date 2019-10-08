@@ -263,7 +263,7 @@ class Tab extends React.Component {
                      >
                         Save
                      </Button>
-                     {this.state.iconTextUpdate && <CircularProgress size={24} className="btn-tabsave-spin" />}
+                     {this.state.iconTextUpdate && <CircularProgress size={24} className="btn-spin" style={{marginTop: 5, marginLeft: -44}} />}
                   </Grid>
                   {this.props.tab.type === "image" &&
                      <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -284,7 +284,7 @@ class Tab extends React.Component {
                            >
                               Submit
                            </Button>
-                           {this.state.imageUpload && <CircularProgress size={24} className="btn-logoimg-spin" />}
+                           {this.state.imageUpload && <CircularProgress size={24} className="btn-spin" style={{marginTop: 5, marginLeft: -50}} />}
                         </form>
                      </Grid>
                   }
@@ -300,7 +300,7 @@ class Tab extends React.Component {
                            >
                               Save
                            </Button>   
-                           {this.state.telephoneUpdate && <CircularProgress size={24} className="btn-tabsave-spin" style={{marginTop: 5}} />}                  
+                           {this.state.telephoneUpdate && <CircularProgress size={24} className="btn-spin" style={{marginTop: 5, marginLeft: 260}} />}                  
                         </div>
                      </Grid>
                   }
@@ -320,7 +320,7 @@ class Tab extends React.Component {
                         >
                            Save
                         </Button>
-                        {this.state.urlUpdate && <CircularProgress size={24} className="btn-tabsave-spin" />}
+                        {this.state.urlUpdate && <CircularProgress size={24} className="btn-spin" style={{marginTop: 5, marginLeft: -44}} />}
                      </Grid>
                   }
                   <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -331,7 +331,7 @@ class Tab extends React.Component {
                      >
                         Delete Tab
                      </Button>
-                     {this.state.tabDelete && <CircularProgress size={24} className="btn-tabdel-spin" />}
+                     {this.state.tabDelete && <CircularProgress size={24} className="btn-spin" style={{marginTop: 17, marginLeft: -65}} />}
                   </Grid>
                </Grid>               
             </Animate>  

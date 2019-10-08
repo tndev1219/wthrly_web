@@ -163,7 +163,7 @@ class Section extends React.Component {
                         onChange={this.handleChange}
                      />
                      <Button className="button btn-active btn-sm ml-20" onClick={this.handleSubmit} disabled={this.state.uploadingImage}>Save</Button>
-                     {this.state.uploadingImage && <CircularProgress size={24} className="btn-logoimg-spin"  style={{marginLeft: '-44px'}} />}
+                     {this.state.uploadingImage && <CircularProgress size={24} className="btn-spin"  style={{marginTop: 5, marginLeft: -44}} />}
                   </Grid>
                   {this.state.srcImageURL ? 
                      <Grid item xs={12} sm={12} md={12} lg={12}>
@@ -187,7 +187,7 @@ class Section extends React.Component {
                            >
                               Submit
                            </Button>
-                           {this.state.uploadingImage && <CircularProgress size={24} className="btn-logoimg-spin" />}
+                           {this.state.uploadingImage && <CircularProgress size={24} className="btn-spin" style={{marginTop: 5, marginLeft: -50}} />}
                         </form>
                      </Grid>
                   }
@@ -205,7 +205,7 @@ class Section extends React.Component {
                         } }
                      />
                      <Button className="button btn-active btn-sm mt-20 mb-20" onClick={this.handleSubmit} disabled={this.state.uploadingImage}>Save</Button>
-                     {this.state.uploadingImage && <CircularProgress size={24} className="btn-logoimg-spin"  style={{marginLeft: '-44px'}} />}
+                     {this.state.uploadingImage && <CircularProgress size={24} className="btn-spin"  style={{marginTop: 25, marginLeft: '-44px'}} />}
                   </Grid>
                </Grid>
                <p className="lead">Delete this section here, it cannot be undone.</p>

@@ -316,7 +316,7 @@ class MessagingPage extends React.Component {
                            >
                               Publish Item
                            </Button>
-                           {this.state.uploading && <CircularProgress size={24} className="btn-message-spin" />}
+                           {this.state.uploading && <CircularProgress size={24} className="btn-spin" style={{marginTop: 8, marginLeft: -70}} />}
                         </Grid>
                         <Grid item>
                            <Button component={Link} to={'/message'} className="button">Cancel</Button>

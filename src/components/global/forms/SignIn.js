@@ -97,27 +97,27 @@ class SignIn extends React.Component {
                            };
 
                            Parse.Cloud.run('getStripeSubscriptionStatus', params)
-                              .then((sub_info) => {
-                                 if (sub_info.data.latest_invoice.payment_intent === null || (sub_info.data.latest_invoice.payment_intent && sub_info.data.latest_invoice.payment_intent.status === 'succeeded')) {
-                                    parse.UpdateSubscription(user, sub_info.data.latest_invoice.payment_intent, sub_info.data.trial_start, sub_info.data.trial_end, sub_info.data.created, sub_info.data.current_period_start, sub_info.data.current_period_end, sub_info.data.plan.interval, sub_info.data.id, function(err, res) {
-                                       if (err) {
-                                          self.props.showAlert(err.message, 'error');
-                                          self.setState({ waiting: false });
-                                       } else {
-                                          var isSubscribed = true;
-                                          login(token, clientName, isSubscribed);
-                                       }
-                                    });
-                                 } else {
-                                    var isSubscribed = false;
-                                    login(token, clientName, isSubscribed);
-                                 }
-                              })
-                              .catch((err) => {
-                                 console.log(JSON.parse(JSON.stringify(err)));
-                                 self.props.showAlert('There was an error geting the Subscription Information in Stripe', 'error');
-                                 self.setState({ waiting: false });
-                              });
+                           .then((sub_info) => {
+                              if (sub_info.data.latest_invoice.payment_intent === null || (sub_info.data.latest_invoice.payment_intent && sub_info.data.latest_invoice.payment_intent.status === 'succeeded')) {
+                                 parse.UpdateSubscription(user, sub_info.data.latest_invoice.payment_intent, sub_info.data.trial_start, sub_info.data.trial_end, sub_info.data.created, sub_info.data.current_period_start, sub_info.data.current_period_end, sub_info.data.plan.interval, sub_info.data.id, function(err, res) {
+                                    if (err) {
+                                       self.props.showAlert(err.message, 'error');
+                                       self.setState({ waiting: false });
+                                    } else {
+                                       var isSubscribed = true;
+                                       login(token, clientName, isSubscribed);
+                                    }
+                                 });
+                              } else {
+                                 var isSubscribed = false;
+                                 login(token, clientName, isSubscribed);
+                              }
+                           })
+                           .catch((err) => {
+                              console.log(JSON.parse(JSON.stringify(err)));
+                              self.props.showAlert('There was an error geting the Subscription Information in Stripe', 'error');
+                              self.setState({ waiting: false });
+                           });
                         }
                      }
                   });
@@ -160,7 +160,7 @@ class SignIn extends React.Component {
                   <Button className="button btn-active btn-lg mb-25" onClick={this.handleClick} disabled={this.state.waiting}>
                      sign in
                   </Button>
-                  {this.state.waiting && <CircularProgress size={24} className="btn-auth-spin" />}
+                  {this.state.waiting && <CircularProgress size={24} className="btn-spin" style={{marginTop: -13}} />}
                </div>
                <div className="item-center">
                   <p className="mb-0">Don't have an account? <Link to="/sign-up">Click here to create one</Link></p>

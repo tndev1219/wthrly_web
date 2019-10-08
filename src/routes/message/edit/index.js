@@ -249,9 +249,7 @@ class MessagingPage extends React.Component {
                <Grid container spacing={4}>
                   <Grid item xs={12} sm={12} md={12} lg={12} className="mt-60">
                      <p className="lead">Add an Image</p>
-                        {this.state.messages.image === "" ? 
-                           ""
-                        :
+                        {this.state.messages.image &&
                            <Card className="section-image ml-20" style={{marginBottom: "25px"}}>
                               <img src={this.state.messages.image} alt="section-img" width={200}></img>
                            </Card>
@@ -385,7 +383,7 @@ class MessagingPage extends React.Component {
                            >
                               Update Item
                            </Button>
-                           {this.state.uploading && <CircularProgress size={24} className="btn-message-spin" />}
+                           {this.state.uploading && <CircularProgress size={24} className="btn-spin" style={{marginTop: 8, marginLeft: -70}} />}
                         </Grid>
                         <Grid item>
                            <Button component={Link} to={'/message'} className="button">Cancel</Button>
@@ -399,7 +397,7 @@ class MessagingPage extends React.Component {
                            >
                               Delete
                            </Button>
-                           {this.state.deleting && <CircularProgress size={24} className="btn-messageDel-spin" />}
+                           {this.state.deleting && <CircularProgress size={24} className="btn-spin" style={{marginTop: 8, marginLeft: -50}} />}
                         </Grid>
                      </Grid>
                   </Grid>

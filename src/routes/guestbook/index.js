@@ -314,7 +314,7 @@ class GuestBookPage extends React.Component {
                            >
                               Submit
                            </Button>
-                           {this.state.uploadingImage && <CircularProgress size={24} className="btn-logoimg-spin" style={{marginLeft: '-52px'}}/>}
+                           {this.state.uploadingImage && <CircularProgress size={24} className="btn-spin" style={{marginTop: 5, marginLeft: -50}} />}
                         </form>
 
                         <p className="lead mb-20">Edit your introduction</p>
@@ -338,13 +338,13 @@ class GuestBookPage extends React.Component {
                            >
                               Save
                            </Button>
-                           {this.state.uploadingImage && <CircularProgress size={24} className="btn-logoimg-spin" style={{marginLeft: '-44px'}} />}
+                           {this.state.uploadingImage && <CircularProgress size={24} className="btn-spin" style={{marginTop: 25, marginLeft: -44}} />}
                         </div>
                      </div>
                   :
                      <Grid container spacing={5} className="mt-60 mb-60">
                         <Grid item  xs={12} sm={12} md={12} lg={12} xl={12} style={{display: "flex", justifyContent: "center"}}>
-                           {!this.state.messages && <CircularProgress className="btn-logoimg-spin" />}
+                           <CircularProgress className="btn-spin" />
                         </Grid>
                      </Grid>
                   }
@@ -391,7 +391,7 @@ class GuestBookPage extends React.Component {
                         :
                            <Grid container spacing={5} className="mt-60 mb-60">
                               <Grid item  xs={12} sm={12} md={12} lg={12} xl={12} style={{display: "flex", justifyContent: "center"}}>
-                                 <CircularProgress className="btn-logoimg-spin" />
+                                 <CircularProgress className="btn-spin" />
                               </Grid>
                            </Grid>
                      }

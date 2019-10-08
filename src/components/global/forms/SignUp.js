@@ -200,7 +200,7 @@ class SignUp extends React.Component {
                   <Button className="button btn-active btn-lg mb-25" onClick={this.handleClick} disabled={this.state.waiting}>
                      sign up
                   </Button>
-                  {this.state.waiting && <CircularProgress size={24} className="btn-auth-spin" />}
+                  {this.state.waiting && <CircularProgress size={24} className="btn-spin" style={{marginTop: -13}} />}
                </div>
             </form>
             <div className="item-center">

@@ -1285,20 +1285,9 @@ hr {
    margin-left: -25px;
 }
 
-// ---- message page style ---- //
-.btn-message-spin {
-   margin-left: -70px;
-   color: $primary !important;
-}
-.btn-messageDel-spin {
-   margin-left: -50px;
-   color: $primary !important;
-}
-
-// ---- style page style ---- //
-.btn-logoimg-spin {
-   margin-left: -50px;
-   color: $primary !important;
+.btn-spin {
+  position: absolute;
+  color: $primary !important;
 }
 
 // ---- tabs page style ---- //
@@ -1313,29 +1302,6 @@ hr {
    }
 }
 
-// ---- tab page style ---- //
-.btn-tabsave-spin {
-  margin-left: -44px;
-  color: $primary !important;
-}
-
-.btn-tabadd-spin {
-  margin-left: -55px;
-  color: $primary !important;
-}
-
-.btn-tabdel-spin {
-  margin-left: -64px;
-  color: $primary !important;
-}
-
 .statistic-card {
   height: 237px;
-}
-
-// ---- auth page style ---- //
-.btn-auth-spin {
-  position: absolute;
-  margin-top: -13px;
-  color: $primary !important;
 }

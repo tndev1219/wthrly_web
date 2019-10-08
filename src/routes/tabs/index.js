@@ -223,7 +223,7 @@ class TabsPage extends React.Component {
                      </Select>
                   </FormControl>
                   <Button className="button btn-active btn-sm ml-20" onClick={this.addTab} disabled={this.state.tabAdding}>Add Tab</Button>
-                  {this.state.tabAdding && <CircularProgress size={24} className="btn-tabadd-spin" />}
+                  {this.state.tabAdding && <CircularProgress size={24} className="btn-spin" style={{marginTop: 5, marginLeft: -55}} />}
                </div>
                <hr className="mb-25"></hr>
                <p className="lead">Tab List</p>
@@ -271,7 +271,7 @@ class TabsPage extends React.Component {
                   :
                      <Grid container spacing={5} className="mt-20">
                         <Grid item  xs={12} sm={12} md={12} lg={12} xl={12} style={{display: "flex", justifyContent: "center"}}>
-                           {!this.state.messages && <CircularProgress className="btn-logoimg-spin" />}
+                           <CircularProgress className="btn-spin" />
                         </Grid>
                      </Grid>
                }

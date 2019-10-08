@@ -898,69 +898,13 @@ exports.addMessage = function( user, payload, callback ) {
 
    if (payload.pdfFile) {
       getBase64(payload.pdfFile)
-         .then(function(base64) {
-            var parseFile = new Parse.File("pdf.pdf", {base64});
-            objectToSave['pdfFile'] = parseFile;
+      .then(function(base64) {
+         var parseFile = new Parse.File("pdf.pdf", {base64});
+         objectToSave['pdfFile'] = parseFile;
 
-            if (payload.imageFile) {
-               getBase64(payload.imageFile)
-                  .then(function(base64) {                     
-                     async.parallel({
-                        iPhone4_5SImageFile: function( cb ){
-                           getResizedImage(base64, 640, 1136, function(err, res) {
-                              cb(err, res)
-                           })
-                        },
-                        iPhone6ImageFile: function( cb ){
-                           getResizedImage(base64, 750, 1334, function(err, res) {
-                              cb(err, res)
-                           })
-                        },
-                        iPhone6PlusImageFile: function( cb ){
-                           getResizedImage(base64, 1242, 2208, function(err, res) {
-                              cb(err, res)
-                           })
-                        },
-                        iPadImageFile: function( cb ){
-                           getResizedImage(base64, 1536, 2048, function(err, res) {
-                              cb(err, res)
-                           })
-                        },
-                        thumbnailImageFile: function( cb ){
-                           getResizedImage(base64, 148, 148, function(err, res) {
-                              cb(err, res)
-                           })
-                        },
-                        thumbnailImageFileIPad: function( cb ){
-                           getResizedImage(base64, 222, 222, function(err, res) {
-                              cb(err, res)
-                           })
-                        },
-                     }, function(err, results){
-                        if (err){
-                           callback(err, null);   
-                        } else {
-                           for( var key in results ){
-                              var base64 = results[key]
-                              var parseFile = new Parse.File("image.jpg", {base64});
-                              objectToSave[key] = parseFile;
-                           }
-                           reallySaveMessage(object, objectToSave, callback);
-                        }
-                     });
-                  }, function(err) {
-                     callback(err, null);
-                  });   
-            } else {
-               reallySaveMessage(object, objectToSave, callback);
-            }
-         }, function(err) {
-            callback(err, null);
-         });   
-   } else {
-      if (payload.imageFile) {
-         getBase64(payload.imageFile)
-            .then(function(base64) {
+         if (payload.imageFile) {
+            getBase64(payload.imageFile)
+            .then(function(base64) {                     
                async.parallel({
                   iPhone4_5SImageFile: function( cb ){
                      getResizedImage(base64, 640, 1136, function(err, res) {
@@ -1001,25 +945,107 @@ exports.addMessage = function( user, payload, callback ) {
                         var parseFile = new Parse.File("image.jpg", {base64});
                         objectToSave[key] = parseFile;
                      }
-                     reallySaveMessage(object, objectToSave, callback);
+                     reallySaveMessage('createMessage', object, objectToSave, callback);
                   }
                });
             }, function(err) {
                callback(err, null);
             });   
+         } else {
+            reallySaveMessage('createMessage', object, objectToSave, callback);
+         }
+      }, function(err) {
+         callback(err, null);
+      });   
+   } else {
+      if (payload.imageFile) {
+         getBase64(payload.imageFile)
+         .then(function(base64) {
+            async.parallel({
+               iPhone4_5SImageFile: function( cb ){
+                  getResizedImage(base64, 640, 1136, function(err, res) {
+                     cb(err, res)
+                  })
+               },
+               iPhone6ImageFile: function( cb ){
+                  getResizedImage(base64, 750, 1334, function(err, res) {
+                     cb(err, res)
+                  })
+               },
+               iPhone6PlusImageFile: function( cb ){
+                  getResizedImage(base64, 1242, 2208, function(err, res) {
+                     cb(err, res)
+                  })
+               },
+               iPadImageFile: function( cb ){
+                  getResizedImage(base64, 1536, 2048, function(err, res) {
+                     cb(err, res)
+                  })
+               },
+               thumbnailImageFile: function( cb ){
+                  getResizedImage(base64, 148, 148, function(err, res) {
+                     cb(err, res)
+                  })
+               },
+               thumbnailImageFileIPad: function( cb ){
+                  getResizedImage(base64, 222, 222, function(err, res) {
+                     cb(err, res)
+                  })
+               },
+            }, function(err, results){
+               if (err){
+                  callback(err, null);   
+               } else {
+                  for( var key in results ){
+                     var base64 = results[key]
+                     var parseFile = new Parse.File("image.jpg", {base64});
+                     objectToSave[key] = parseFile;
+                  }
+                  reallySaveMessage('createMessage', object, objectToSave, callback);
+               }
+            });
+         }, function(err) {
+            callback(err, null);
+         });   
       } else {
-         reallySaveMessage(object, objectToSave, callback);
+         reallySaveMessage('createMessage', object, objectToSave, callback);
       }
    }
 };
 
-function reallySaveMessage(object, objectToSave, callback) {
+function reallySaveMessage(type, object, objectToSave, callback) {
    object.save(objectToSave)
-      .then( function(object){
-         callback(null, "Success!");
-      }, function(error) {
-         callback(error, null);
-      }); 
+   .then( function(object){
+      callback(null, "Success!");
+
+      if (type === 'createMessage' && objectToSave.resorts.length > 0) {
+         console.log(objectToSave)
+         // send push here!!
+         // get title
+         var title = objectToSave.title;
+         // capitalise the first letter
+         title = title.charAt(0).toUpperCase() + title.substr(1);
+         // get a list of resorts / locations and covert space to underscore.
+         var channels = [];
+         for( var i = 0; i < objectToSave.resorts.length; i++ ){
+            channels.push( objectToSave.resorts[i].split(" ").join("_") );
+         }
+         //
+         var data = {
+            alert: title,
+            badge: "increment",
+            sound: "default"
+         };
+         
+         Parse.Cloud.run("sendPushToChannels", { channels: channels, data: data })
+         .then(function(res) {})
+         .catch(function(err) {
+            console.log("failed to send push notification", err);
+         });
+      }
+   }, function(error) {
+      callback(error, null);
+   }); 
 }
 
 exports.updateMessage = function(id, payload, callback) {
@@ -1097,14 +1123,14 @@ exports.updateMessage = function(id, payload, callback) {
                                        var parseFile = new Parse.File("image.jpg", {base64});
                                        objectToSave[key] = parseFile;
                                     }
-                                    reallySaveMessage(object, objectToSave, callback);
+                                    reallySaveMessage('updateMessage', object, objectToSave, callback);
                                  }
                               });
                            }, function(err) {
                               callback(err, null);
                            });   
                      } else {
-                        reallySaveMessage(object, objectToSave, callback);
+                        reallySaveMessage('updateMessage', object, objectToSave, callback);
                      }
                   }, function(err) {
                      callback(err, null);
@@ -1153,14 +1179,14 @@ exports.updateMessage = function(id, payload, callback) {
                                  var parseFile = new Parse.File("image.jpg", {base64});
                                  objectToSave[key] = parseFile;
                               }
-                              reallySaveMessage(object, objectToSave, callback);
+                              reallySaveMessage('updateMessage', object, objectToSave, callback);
                            }
                         });
                      }, function(err) {
                         callback(err, null);
                      });   
                } else {
-                  reallySaveMessage(object, objectToSave, callback);
+                  reallySaveMessage('updateMessage', object, objectToSave, callback);
                }
             }
          }
@@ -1971,167 +1997,165 @@ exports.addNewUser = function(hotelName, websiteUrl, phoneNumber, email, passwor
 
    // Add New User
    object.save(objectToSave)
-      .then(function(res) {
+   .then(function(res) {
 
-         // Get token and clientName from New User
-         self.getTokenForUsernamePassword(email, password, function(err, token, clientName) {
-            newToken = token;
-            newClientName = clientName;
+      // Get token and clientName from New User
+      self.getTokenForUsernamePassword(email, password, function(err, token, clientName) {
+         newToken = token;
+         newClientName = clientName;
 
-            // Get user object from token of New User (to get clientId)
-            self.createUserFromToken(token, function(err, user) {
-               var clientId = getClientId(user);
+         // Get user object from token of New User (to get clientId)
+         self.createUserFromToken(token, function(err, user) {
+            var clientId = getClientId(user);
 
-               var Client = Parse.Object.extend("Client");
-               var object = new Client();
+            var Client = Parse.Object.extend("Client");
+            var object = new Client();
 
-               objectToSave = {
-                  clientId: clientId,
-                  name: hotelName,
-                  searchTerms: [hotelName]
-               }
+            objectToSave = {
+               clientId: clientId,
+               name: hotelName,
+               searchTerms: [hotelName]
+            }
 
-               // Add New Client
-               object.save(objectToSave)
-                  .then(function(res) {
+            // Add New Client
+            object.save(objectToSave)
+            .then(function(res) {
 
-                     // create default tab (Home, Messages, Call, Website)
-                     async.parallel({
-                        homeTab: function( cb ){
-                           var homeObjectToSave = {
-                              locationName: `${clientId} Primary location`,
-                              clientId: clientId,
-                              type: 'image',
-                              iconText: 'Home',
-                              order: 1,
-                              icon: 'home',
-                              image: 'FTmo4RrfKc' // default image of Image or Home tab when new client sign up
-                           };
-                           createDefaultTab(homeObjectToSave, function(err, res) {
-                              cb(err, res)
-                           })
-                        },
-                        messageTab: function( cb ){
-                           var messageObjectToSave = {
-                              locationName: `${clientId} Primary location`,
-                              clientId: clientId,
-                              type: 'messages',
-                              iconText: 'Messages',
-                              order: 2,
-                              icon: 'messages',
-                              isMessages: true
-                           };
-                           createDefaultTab(messageObjectToSave, function(err, res) {
-                              cb(err, res)
-                           })
-                        },
-                        callTab: function( cb ){
-                           var callObjectToSave = {
-                              locationName: `${clientId} Primary location`,
-                              clientId: clientId,
-                              type: 'call',
-                              telephone: phoneNumber,
-                              iconText: 'Call',
-                              order: 3,
-                              icon: 'call'
-                           };
-                           createDefaultTab(callObjectToSave, function(err, res) {
-                              cb(err, res)
-                           })
-                        },
-                        websiteTab: function( cb ){
-                           var websiteObjectToSave = {
-                              locationName: `${clientId} Primary location`,
-                              clientId: clientId,
-                              type: 'web',
-                              url: websiteUrl,
-                              iconText: 'Website',
-                              order: 4,
-                              icon: 'web'
-                           };
-                           createDefaultTab(websiteObjectToSave, function(err, res) {
-                              cb(err, res)
-                           })
+               // create default tab (Home, Messages, Call, Website)
+               async.parallel({
+                  homeTab: function( cb ){
+                     var homeObjectToSave = {
+                        locationName: `${clientId} Primary location`,
+                        clientId: clientId,
+                        type: 'image',
+                        iconText: 'Home',
+                        order: 1,
+                        icon: 'home',
+                        image: 'FTmo4RrfKc' // default image of Image or Home tab when new client sign up
+                     };
+                     createDefaultTab(homeObjectToSave, function(err, res) {
+                        cb(err, res)
+                     })
+                  },
+                  messageTab: function( cb ){
+                     var messageObjectToSave = {
+                        locationName: `${clientId} Primary location`,
+                        clientId: clientId,
+                        type: 'messages',
+                        iconText: 'Messages',
+                        order: 2,
+                        icon: 'messages',
+                        isMessages: true
+                     };
+                     createDefaultTab(messageObjectToSave, function(err, res) {
+                        cb(err, res)
+                     })
+                  },
+                  callTab: function( cb ){
+                     var callObjectToSave = {
+                        locationName: `${clientId} Primary location`,
+                        clientId: clientId,
+                        type: 'call',
+                        telephone: phoneNumber,
+                        iconText: 'Call',
+                        order: 3,
+                        icon: 'call'
+                     };
+                     createDefaultTab(callObjectToSave, function(err, res) {
+                        cb(err, res)
+                     })
+                  },
+                  websiteTab: function( cb ){
+                     var websiteObjectToSave = {
+                        locationName: `${clientId} Primary location`,
+                        clientId: clientId,
+                        type: 'web',
+                        url: websiteUrl,
+                        iconText: 'Website',
+                        order: 4,
+                        icon: 'web'
+                     };
+                     createDefaultTab(websiteObjectToSave, function(err, res) {
+                        cb(err, res)
+                     })
+                  }
+               }, function (err, results) {
+                  if (err){
+                     callback(err, null);   
+                  } else {
+
+                     // create default style
+                     var Style = Parse.Object.extend("Style");
+                     object = new Style();
+
+                     objectToSave = {
+                        clientId: clientId,
+                        deepNavColour: '#ffffff7f',
+                        iconColour: '#c7c7c7',
+                        storyBackgroundColour: '#333333',
+                        iconLiveColour: '#fAfAfA',
+                        tagsTextColour: '#333333',
+                        contentBackgroundColour: '#4c4c4c',
+                        bottomBarColour: '#333333',
+                        textColour: '#ffffff',
+                        shallowNavColour: '#ffffff7f'
+                     }
+
+                     object.save(objectToSave)
+                     .then(function(res) {
+
+                        // create Location
+                        var Location = Parse.Object.extend("Location");
+                        object = new Location();
+   
+                        objectToSave = {
+                           clientId: clientId,
+                           name: `${clientId} Primary location`,
+                           displayName: 'Primary location',
+                           endPoint: true
                         }
-                     }, function (err, results) {
-                        if (err){
-                           callback(err, null);   
-                        } else {
+   
+                        object.save(objectToSave)
+                        .then(function(res) {
 
-                           // create default style
-                           var Style = Parse.Object.extend("Style");
-                           object = new Style();
-
+                           // create SubLocation
+                           var SubLocation = Parse.Object.extend("SubLocation");
+                           object = new SubLocation();
+      
                            objectToSave = {
                               clientId: clientId,
-                              deepNavColour: '#ffffff7f',
-                              iconColour: '#c7c7c7',
-                              storyBackgroundColour: '#333333',
-                              iconLiveColour: '#fAfAfA',
-                              tagsTextColour: '#333333',
-                              contentBackgroundColour: '#4c4c4c',
-                              bottomBarColour: '#333333',
-                              textColour: '#ffffff',
-                              shallowNavColour: '#ffffff7f'
+                              name: `${clientId} Primary location`,
+                              displayName: 'Primary location',
+                              location: 'Primary location'
                            }
-
+      
                            object.save(objectToSave)
-                              .then(function(res) {
-
-                                 // create Location
-                                 var Location = Parse.Object.extend("Location");
-                                 object = new Location();
-            
-                                 objectToSave = {
-                                    clientId: clientId,
-                                    name: `${clientId} Primary location`,
-                                    displayName: 'Primary location',
-                                    endPoint: true
-                                 }
-            
-                                 object.save(objectToSave)
-                                    .then(function(res) {
-            
-                                       // create SubLocation
-                                       var SubLocation = Parse.Object.extend("SubLocation");
-                                       object = new SubLocation();
-                  
-                                       objectToSave = {
-                                          clientId: clientId,
-                                          name: `${clientId} Primary location`,
-                                          displayName: 'Primary location',
-                                          location: 'Primary location'
-                                       }
-                  
-                                       object.save(objectToSave)
-                                          .then(function(res) {            
-                                             callback(null, newToken, newClientName);
-                                          })
-                                          .catch(function(err) {
-                                             callback(err, null);
-                                          })
-                                    })
-                                    .catch(function(err) {
-                                       callback(err, null);
-                                    })
-                              })
-                              .catch(function(err) {
-                                 callback(err, null);
-                              })
-                        }
+                           .then(function(res) {            
+                              callback(null, newToken, newClientName);
+                           })
+                           .catch(function(err) {
+                              callback(err, null);
+                           })
+                        })
+                        .catch(function(err) {
+                           callback(err, null);
+                        })
                      })
-                  })
-                  .catch(function(err) {
-                     callback(err, null);
-                  })
-
-
+                     .catch(function(err) {
+                        callback(err, null);
+                     })
+                  }
+               })
+            })
+            .catch(function(err) {
+               callback(err, null);
             })
          })
       })
-      .catch(function(err) {
-         callback(err, null);
-      })
+   })
+   .catch(function(err) {
+      callback(err, null);
+   })
 }
 
 function createDefaultTab(objectToSave, callback) {

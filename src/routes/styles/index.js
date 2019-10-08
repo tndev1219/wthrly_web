@@ -203,7 +203,7 @@ class StylesPage extends React.Component {
                         >
                            Submit
                         </Button>
-                        {this.state.uploadingLogo && <CircularProgress size={24} className="btn-logoimg-spin" />}
+                        {this.state.uploadingLogo && <CircularProgress size={24} className="btn-spin" style={{marginTop: 5, marginLeft: -50}} />}
                      </form>
                      <hr className="mt-15"></hr>
                   </Grid>
@@ -225,7 +225,7 @@ class StylesPage extends React.Component {
                         >
                            Submit
                         </Button>
-                        {this.state.uploadingSmallLogo && <CircularProgress size={24} className="btn-logoimg-spin" />}
+                        {this.state.uploadingSmallLogo && <CircularProgress size={24} className="btn-spin" style={{marginTop: 5, marginLeft: -50}} />}
                      </form>
                      <hr className="mt-15"></hr>
                   </Grid>
@@ -284,7 +284,7 @@ class StylesPage extends React.Component {
                      >
                         Submit
                      </Button>
-                     {this.state.uploadingColour && <CircularProgress size={24} className="btn-logoimg-spin" />}
+                     {this.state.uploadingColour && <CircularProgress size={24} className="btn-spin" style={{marginTop: 7, marginLeft: -50}} />}
                   </Grid>
                </Grid>
                <div style={{height: 100}}></div>
